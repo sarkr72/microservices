@@ -1,0 +1,9 @@
+request:
+  method: GET
+  url: /departments/1
+response:
+  status: 200
+  headers:
+    Content-Type: application/json
+  body:
+    name: "Engineering"

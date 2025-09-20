@@ -1,0 +1,49 @@
+# Maven build artifacts
+target/
+*.jar
+*.war
+*.ear
+
+# IDE-specific files
+.idea/
+*.iml
+.vscode/
+.eclipse/
+.metadata/
+*.project
+*.classpath
+
+# Log files
+*.log
+logs/
+
+# Local configuration files
+application*.yml
+application*.properties
+bootstrap*.yml
+bootstrap*.properties
+
+# Docker and runtime data
+docker-compose.yml
+.env
+*.dockerignore
+dept-data/
+emp-data/
+
+# Sensitive files
+*.key
+*.pem
+*.crt
+secrets/
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+.DS_Store
+*.cache
+
+# Test and coverage reports
+test-results/
+jacoco.exec
+coverage/
