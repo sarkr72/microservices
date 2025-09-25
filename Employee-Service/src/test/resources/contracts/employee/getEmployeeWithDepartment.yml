@@ -1,0 +1,35 @@
+name: should return an employee with department by ID
+request:
+  method: GET
+  url: /employees/1
+  headers:
+    Accept: application/json
+response:
+  status: 200
+  headers:
+    Content-Type: application/json
+  body:
+    employee:
+      id: 1
+      name: "John Doe"
+      departmentId: 1
+    department:
+      id: 1
+      name: "Engineering"
+  matchers:
+    body:
+      - path: $.employee.id
+        type: by_regex
+        value: "[0-9]+"
+      - path: $.employee.name
+        type: by_regex
+        value: ".+"
+      - path: $.employee.departmentId
+        type: by_regex
+        value: "[0-9]+"
+      - path: $.department.id
+        type: by_regex
+        value: "[0-9]+"
+      - path: $.department.name
+        type: by_regex
+        value: ".+"

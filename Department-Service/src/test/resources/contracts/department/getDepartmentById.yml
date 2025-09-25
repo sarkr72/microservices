@@ -1,3 +1,4 @@
+name: should return a department by ID
 request:
   method: GET
   url: /departments/1
@@ -6,4 +7,5 @@ response:
   headers:
     Content-Type: application/json
   body:
+    id: 1
     name: "Engineering"

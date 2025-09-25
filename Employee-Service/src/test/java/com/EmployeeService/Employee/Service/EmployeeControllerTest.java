@@ -1,31 +1,49 @@
 package com.EmployeeService.Employee.Service;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.web.servlet.MockMvc;
-
 import com.EmployeeService.Employee.Service.controller.EmployeeController;
 import com.EmployeeService.Employee.Service.dto.CombinedResponse;
 import com.EmployeeService.Employee.Service.dto.Department;
 import com.EmployeeService.Employee.Service.model.Employee;
 import com.EmployeeService.Employee.Service.services.EmployeeService;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(EmployeeController.class)
 @ExtendWith(MockitoExtension.class)
+@TestPropertySource(locations = "classpath:application-test.yml", properties = {
+    "spring.cloud.openfeign.enabled=false",
+    "spring.main.allow-bean-definition-overriding=true"
+})
 public class EmployeeControllerTest {
+
+    @Configuration
+    static class TestConfig {
+        @Bean
+        MeterRegistry meterRegistry() {
+            return new SimpleMeterRegistry();
+        }
+    }
+
     @Autowired
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private EmployeeService employeeService;
 
     @Test

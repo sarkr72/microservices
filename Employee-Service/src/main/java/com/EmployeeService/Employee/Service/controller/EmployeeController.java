@@ -1,5 +1,6 @@
 package com.EmployeeService.Employee.Service.controller;
 
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,53 +12,30 @@ import com.EmployeeService.Employee.Service.dto.CombinedResponse;
 import com.EmployeeService.Employee.Service.model.Employee;
 import com.EmployeeService.Employee.Service.services.EmployeeService;
 
-//@RestController
-//@RequestMapping("/employees")
-//public class EmployeeController {
-//    private final EmployeeRepository repository;
-//    private final DepartmentClient departmentClient;
-//
-//    public EmployeeController(EmployeeRepository repository, DepartmentClient departmentClient) {
-//        this.repository = repository;
-//        this.departmentClient = departmentClient;
-//    }
-//
-//    @PostMapping
-//    public Employee save(@RequestBody Employee employee) {
-//        return repository.save(employee);
-//    }
-//
-//    @GetMapping("/{id}")
-//    public Map<String, Object> findById(@PathVariable Long id) {
-//        Employee employee = repository.findById(id).orElse(null);
-//
-//        if (employee == null) return Map.of("message", "Employee not found");
-//
-//        Department department = departmentClient.getDepartment(employee.getDepartmentId());
-//
-//        return Map.of(
-//            "employee", employee,
-//            "department", department
-//        );
-//    }
-//    
-//    @GetMapping
-//    public List<Employee> getAll() {
-//        return repository.findAll();
-//    }
-//}
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
     private final EmployeeService service;
 
-    public EmployeeController(EmployeeService service) { this.service = service; }
+    public EmployeeController(EmployeeService service) {
+        this.service = service;
+    }
 
+    @Operation(summary = "Create a new employee", description = "Saves an employee to the database")
+    @ApiResponse(responseCode = "200", description = "Employee created successfully")
     @PostMapping
-    public Employee create(@RequestBody Employee e) { return service.save(e); }
+    public Employee create(@RequestBody Employee e) {
+        return service.save(e);
+    }
 
+    @Operation(summary = "Get employee with department", description = "Retrieve an employee and their department by ID")
+    @ApiResponse(responseCode = "200", description = "Employee and department found")
+    @ApiResponse(responseCode = "404", description = "Employee not found")
     @GetMapping("/{id}")
-    public CombinedResponse get(@PathVariable Long id) { return service.getEmployeeWithDepartment(id); }
+    public CombinedResponse get(@PathVariable Long id) {
+        return service.getEmployeeWithDepartment(id);
+    }
 }
-

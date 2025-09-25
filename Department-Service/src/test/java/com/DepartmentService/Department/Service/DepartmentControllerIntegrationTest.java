@@ -1,41 +1,62 @@
-package com.DepartmentService.Department.Service;
+package com.departmentService.department.service;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import com.departmentService.department.service.model.Department;
+import com.departmentService.department.service.repository.DepartmentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import com.DepartmentService.Department.Service.model.Department;
-import com.DepartmentService.Department.Service.repositories.DepartmentRepository;
+import java.util.Map;
 
-@SpringBootTest(properties = "spring.profiles.active=test")
-public class DepartmentControllerIntegrationTest {
-    @Autowired
-    private WebApplicationContext context;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-    private MockMvc mockMvc;
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class DepartmentControllerIntegrationTest {
 
     @Autowired
-    private DepartmentRepository departmentRepository;
+    private TestRestTemplate restTemplate;
+
+    @Autowired
+    private DepartmentRepository repository;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-        Department department = new Department("Engineering");
-        departmentRepository.save(department);
+        repository.deleteAll();
     }
 
     @Test
-    void getDepartment_shouldReturn200() throws Exception {
-        mockMvc.perform(get("/departments/1"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name").value("Engineering"));
+    void testSaveDepartment() {
+        Department department = new Department("Engineering");
+        ResponseEntity<Department> response = restTemplate.postForEntity("/departments", department, Department.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Engineering", response.getBody().getName());
+    }
+
+    @Test
+    void testFindById() {
+        Department department = new Department("HR");
+        department = repository.save(department);
+
+        ResponseEntity<Department> response = restTemplate.getForEntity("/departments/" + department.getId(), Department.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("HR", response.getBody().getName());
+    }
+
+    @Test
+    void testFindByIdNotFound() {
+        ResponseEntity<Map> response = restTemplate.getForEntity("/departments/999", Map.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Department with id 999 not found", response.getBody().get("error"));
     }
 }
