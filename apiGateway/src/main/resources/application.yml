@@ -1,0 +1,96 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: api-gateway
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      routes:
+        - id: department-service
+          uri: lb://department-service
+          predicates:
+            - Path=/department-service/**
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: gatewayDeptCB
+                fallbackUri: forward:/fallback/departments
+        - id: employee-service
+          uri: lb://employee-service
+          predicates:
+            - Path=/employee-service/**
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: gatewayEmpCB
+                fallbackUri: forward:/fallback/employees
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      gatewayDeptCB:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 5
+        registerHealthIndicator: true
+      gatewayEmpCB:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 5
+        registerHealthIndicator: true
+  retry:
+    metrics:
+      legacy:
+        enabled: true
+  thread-pool-bulkhead:
+    metrics:
+      legacy:
+        enabled: true
+  timelimiter:
+    metrics:
+      legacy:
+        enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+    enabled: true
+    registry-fetch-interval-seconds: 5
+    instance-info-replication-interval-seconds: 5
+    initial-instance-info-replication-interval-seconds: 5
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+    status-page-url: http://localhost:8082/actuator/info
+    health-check-url: http://localhost:8082/actuator/health
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.springframework: DEBUG
+    com.netflix: DEBUG
+    org.springframework.cloud: TRACE
+    org.springframework.cloud.gateway: TRACE
+    reactor.netty: DEBUG
+    io.github.resilience4j: TRACE

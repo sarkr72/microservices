@@ -17,11 +17,18 @@ target/
 *.log
 logs/
 
-# Local configuration files
-application*.yml
-application*.properties
-bootstrap*.yml
-bootstrap*.properties
+# Ignore config except default and test
+application-*.yml
+!application.yml
+!application-test.yml
+
+application-*.properties
+!application.properties
+!application-test.properties
+
+bootstrap-*.yml
+bootstrap-*.properties
+
 
 # Docker and runtime data
 docker-compose.yml
