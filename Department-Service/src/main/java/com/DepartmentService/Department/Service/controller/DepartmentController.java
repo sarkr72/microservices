@@ -2,8 +2,6 @@ package com.departmentService.department.service.controller;
 
 import com.departmentService.department.service.model.Department;
 import com.departmentService.department.service.repository.DepartmentRepository;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +27,6 @@ public class DepartmentController {
         return repository.save(department);
     }
 
-    @Operation(summary = "Get department by ID", description = "Retrieve a department by its ID")
-    @ApiResponse(responseCode = "200", description = "Department found")
-    @ApiResponse(responseCode = "404", description = "Department not found")
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable Long id) {
         return repository.findById(id)

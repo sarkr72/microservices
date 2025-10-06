@@ -1,6 +1,5 @@
 server:
   port: 8082
-
 spring:
   application:
     name: api-gateway
@@ -8,13 +7,23 @@ spring:
     web-application-type: reactive
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      discovery:
+        locator:
+          enabled: false
+          lower-case-service-id: true
       routes:
         - id: department-service
           uri: lb://department-service
           predicates:
-            - Path=/department-service/**
+            - Path=/departments/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
             - name: CircuitBreaker
               args:
                 name: gatewayDeptCB
@@ -29,7 +38,20 @@ spring:
               args:
                 name: gatewayEmpCB
                 fallbackUri: forward:/fallback/employees
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=0
+  zipkin:
+    base-url: http://localhost:9411
+  sleuth:
+    enables: true
 
+jwt:
+  secret: EEpAkjtJ2CZgwlMTIKslTISf3/3NjabXPlHk6lB73ao=
+  expirationMs: 86400000
 resilience4j:
   circuitbreaker:
     instances:
@@ -45,19 +67,6 @@ resilience4j:
         waitDurationInOpenState: 10000
         permittedNumberOfCallsInHalfOpenState: 5
         registerHealthIndicator: true
-  retry:
-    metrics:
-      legacy:
-        enabled: true
-  thread-pool-bulkhead:
-    metrics:
-      legacy:
-        enabled: true
-  timelimiter:
-    metrics:
-      legacy:
-        enabled: true
-
 eureka:
   client:
     service-url:
@@ -76,7 +85,6 @@ eureka:
     status-page-url: http://localhost:8082/actuator/info
     health-check-url: http://localhost:8082/actuator/health
     instance-id: ${spring.application.name}:${server.port}
-
 management:
   endpoints:
     web:
@@ -85,12 +93,22 @@ management:
   endpoint:
     health:
       show-details: always
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
 
 logging:
   level:
-    org.springframework: DEBUG
-    com.netflix: DEBUG
-    org.springframework.cloud: TRACE
-    org.springframework.cloud.gateway: TRACE
+    root: INFO
+    org.springframework: INFO
+    org.springframework.cloud: DEBUG
+    org.springframework.cloud.gateway: DEBUG
     reactor.netty: DEBUG
-    io.github.resilience4j: TRACE
+    io.github.resilience4j: DEBUG
+    com.apiGateway: DEBUG
+    com.apiGateway.apiGateway.security: TRACE
+    org.slf4j: TRACE
+  file:
+    name: target/spring.log
+
