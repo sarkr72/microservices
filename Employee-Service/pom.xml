@@ -5,16 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.EmployeeService</groupId>
-    <artifactId>Employee-Service</artifactId>
+    <artifactId>employee-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Employee-Service</name>
     <description>Employee Service</description>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.0</version>
-        <relativePath/>
+        <groupId>com.microservices</groupId>
+        <artifactId>microservices-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -53,21 +52,15 @@
             <version>42.7.4</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.6.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock-jre8</artifactId>
-            <version>3.0.1</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -75,6 +68,15 @@
             <version>2.3.232</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-stream-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.common</groupId>
+            <artifactId>common-events</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+       <!--  <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
             <scope>test</scope>
@@ -84,12 +86,8 @@
             <artifactId>spring-mock-mvc</artifactId>
             <version>5.5.0</version>
             <scope>test</scope>
-        </dependency>
-<dependency>
-    <groupId>io.jsonwebtoken</groupId>
-    <artifactId>jjwt</artifactId>
-    <version>0.9.1</version>
-</dependency>
+        </dependency>-->
+        
     </dependencies>
 
     <dependencyManagement>
@@ -111,18 +109,18 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>3.4.0</version>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-contract-maven-plugin</artifactId>
                 <version>4.1.0</version>
                 <extensions>true</extensions>
-                <configuration>
+                 <configuration>
                     <baseClassForTests>com.EmployeeService.Employee.Service.BaseTestClass</baseClassForTests>
                     <contractsDirectory>${project.basedir}/src/test/resources/contracts</contractsDirectory>
                     <testMode>MOCKMVC</testMode>
                     <basePackageForTests>com.EmployeeService.Employee.Service.contracts</basePackageForTests>
                 </configuration>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 </project>

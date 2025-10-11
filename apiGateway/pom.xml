@@ -9,9 +9,9 @@
         <relativePath/>
     </parent>
     <groupId>com.APIGateway</groupId>
-    <artifactId>API-Gateway</artifactId>
+    <artifactId>api-gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>API-Gateway</name>
+    <name>api-gateway</name>
     <description>API Gateway</description>
 
     <properties>
