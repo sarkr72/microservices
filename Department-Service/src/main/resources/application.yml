@@ -1,5 +1,6 @@
 server:
   port: 8080
+  address: 0.0.0.0
 
 spring:
   application:
@@ -24,7 +25,8 @@ spring:
     console:
       enabled: true
       path: /h2-console
-
+      settings:
+        web-allow-others: true
   cloud:
     stream:
       bindings:
