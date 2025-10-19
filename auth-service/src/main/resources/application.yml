@@ -31,7 +31,6 @@ eureka:
     enabled: true
   instance:
     prefer-ip-address: true
-    # hostname: localhost
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 10
     # status-page-url: http://localhost:8083/actuator/info
