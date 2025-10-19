@@ -44,7 +44,6 @@ spring:
             - Path=/auth/**
           filters:
             - StripPrefix=0
-
 jwt:
   secret: EEpAkjtJ2CZgwlMTIKslTISf3/3NjabXPlHk6lB73ao=
   expirationMs: 86400000
@@ -66,7 +65,7 @@ resilience4j:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eureka-server.default.svc.cluster.local:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
     enabled: true
@@ -75,11 +74,11 @@ eureka:
     initial-instance-info-replication-interval-seconds: 5
   instance:
     prefer-ip-address: true
-    hostname: localhost
+    # hostname: localhost
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 10
-    status-page-url: http://localhost:8082/actuator/info
-    health-check-url: http://localhost:8082/actuator/health
+    #status-page-url: http://localhost:8082/actuator/info
+    #health-check-url: http://localhost:8082/actuator/health
     instance-id: ${spring.application.name}:${server.port}
 management:
   endpoints:
@@ -89,7 +88,6 @@ management:
   endpoint:
     health:
       show-details: always
-
 logging:
   level:
     root: INFO
@@ -103,4 +101,3 @@ logging:
     org.slf4j: TRACE
   file:
     name: target/spring.log
-

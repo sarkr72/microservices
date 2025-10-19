@@ -1,23 +1,19 @@
 server:
   port: 8761
-
 spring:
   application:
     name: eureka-server
-
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: http://localhost:8761/eureka/
-
+      defaultZone: http://localhost:8761/eureka/ # doesn’t matter inside server itself
 management:
   endpoints:
     web:
       exposure:
         include: health,info
-
 logging:
   level:
     org.springframework: DEBUG
